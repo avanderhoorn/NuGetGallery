@@ -35,7 +35,7 @@ namespace NuGetGallery
             _file = file;
         }
 
-        public Stream Open()
+        public Stream OpenRead()
         {
             return _file.Open(FileMode.Open);
         }

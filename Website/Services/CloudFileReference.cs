@@ -37,7 +37,7 @@ namespace NuGetGallery
             _stream = stream;
         }
 
-        public Stream Open()
+        public Stream OpenRead()
         {
             _stream.Seek(0, SeekOrigin.Begin);
             return _stream;

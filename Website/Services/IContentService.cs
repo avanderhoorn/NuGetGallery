@@ -9,14 +9,6 @@ namespace NuGetGallery.Services
 {
     public interface IContentService
     {
-        HtmlString GetContentItem(string name, bool bypassCache);
-    }
-
-    public static class ContentServiceExtensions
-    {
-        public static HtmlString GetContentItem(this IContentService self, string name)
-        {
-            return self.GetContentItem(name, bypassCache: false);
-        }
+        Task<HtmlString> GetContentItemAsync(string name, TimeSpan expiresIn);
     }
 }

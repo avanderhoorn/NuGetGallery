@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Web.Helpers;
 
 namespace NuGetGallery.Services
@@ -10,14 +11,11 @@ namespace NuGetGallery.Services
     public class TestFileReference : IFileReference
     {
         private byte[] _content;
-        public string FullName { get; private set; }
+        private int _openCount = 0;
 
-        public string Name
-        {
-            get { return Path.GetFileName(FullName); }
-        }
+        public int OpenCount { get { return _openCount; } }
 
-        public DateTime LastModifiedUtc
+        public bool HasChanged
         {
             get;
             private set;
@@ -29,23 +27,30 @@ namespace NuGetGallery.Services
             private set;
         }
 
-        public TestFileReference(byte[] content, string fullName, DateTime lastModifiedUtc, string contentId)
+        public TestFileReference(byte[] content, string contentId, bool hasChanged)
         {
             _content = content;
-            FullName = fullName;
-            LastModifiedUtc = lastModifiedUtc;
             ContentId = contentId;
+            HasChanged = hasChanged;
         }
 
-        public static TestFileReference Create(string content, string fullName, DateTime lastModifiedUtc)
+        public static TestFileReference CreateUnchanged(string content)
         {
             byte[] contentBytes = Encoding.UTF8.GetBytes(content);
             string hash = Crypto.Hash(contentBytes);
-            return new TestFileReference(contentBytes, fullName, lastModifiedUtc, hash);
+            return new TestFileReference(new byte[0], hash, hasChanged: true);
         }
 
-        public Stream Open()
+        public static TestFileReference CreateChanged(string content)
         {
+            byte[] contentBytes = Encoding.UTF8.GetBytes(content);
+            string hash = Crypto.Hash(contentBytes);
+            return new TestFileReference(contentBytes, hash, hasChanged: true);
+        }
+
+        public Stream OpenRead()
+        {
+            Interlocked.Increment(ref _openCount);
             return new MemoryStream(_content);
         }
     }

@@ -21,8 +21,9 @@ namespace NuGetGallery
         /// </summary>
         /// <param name="folderName">The folder containing the file to open</param>
         /// <param name="fileName">The file within that folder to open</param>
+        /// <param name="ifNoneMatch">The <see cref="IFileReference.ContentId"/> value to use in an If-None-Match request</param>
         /// <returns>A <see cref="IFileReference"/> representing the file reference</returns>
-        Task<IFileReference> GetFileReferenceAsync(string folderName, string fileName);
+        Task<IFileReference> GetFileReferenceAsync(string folderName, string fileName, string ifNoneMatch = null);
 
         Task SaveFileAsync(string folderName, string fileName, Stream packageFile);
     }
