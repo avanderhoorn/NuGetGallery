@@ -98,7 +98,7 @@ namespace NuGetGallery
             return stream;
         }
 
-        public Task<IFileReference> GetFileReferenceAsync(string folderName, string fileName)
+        public Task<IFileReference> GetFileReferenceAsync(string folderName, string fileName, string ifNoneMatch = null)
         {
             throw new NotImplementedException();
         }
